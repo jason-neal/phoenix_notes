@@ -1,0 +1,226 @@
+\title{Notes on PHOENIX Spectra:}
+\author{
+        Jason Neal \\
+        IA, Portugal\\
+        }
+\date{\today}
+
+\documentclass[12pt, a4paper]{article}
+\usepackage{ifpdf}
+\ifpdf
+\usepackage[breaklinks,hidelinks]{hyperref}
+\else
+\usepackage{url}
+\fi
+\usepackage{listings}   
+\usepackage[textwidth=16cm,]{geometry}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A cheat sheet for phoenix spectra.
+\end{abstract}
+
+\section{Introduction}
+Phoenix ACES:
+Too many lines that don't seem to match the stellar spectra.
+
+
+\paragraph{Outline}
+
+Summary some of the different models
+
+\begin{table}
+	\begin{tabular}{lccccc}
+		\hline
+		Model & Phoenix version & Line Lists & Teff Range &  Notes &Reference\\
+		\hline
+		PHOENIX-ACES & 16 & & 2300-12000K & new EOS & \href{https://arxiv.org/abs/1303.5632}{Husser 2013} \\
+		
+	BT-Settl & 15 & & & & \href{}{} \\
+	BT-Cond & & & & & \href{}{} \\
+	BT-Dusty & & & & & \href{}{} \\
+	AMES-Cond & & & & & \href{}{} \\
+    AMES-Dusty & & & & & \href{}{} \\
+    \hline
+	\end{tabular}
+\end{table}
+
+
+\section{Previous work}\label{previous work}
+
+
+\subsection{PHOENIX ACES}:
+Available from Goettingen  \href{http://phoenix.astro.physik.uni-goettingen.de/}{http://phoenix.astro.physik.uni-goettingen.de/}
+The PHOENIX-ACES library can be hound at...
+The spectra are in fits format and have headers etc. 
+
+PHOENIX 16 code.
+Quote:
+Many changes have been implemented with respect to previous
+PHOENIX models. For example, the more detailed treatment of
+the chemical equilibrium in  the  new EOS strongly affects  the
+stellar structure and results in different line and molecular band
+strengths, which can introduce significant differences in comparison to older PHOENIX model spectra, especially for M stars as
+discussed below. But major changes can also be expected from
+the new list of element abundances and the new parameterizations
+for the mixing length and the micro-turbulence. Consequentially
+we observed some significant differences between spectra from
+previous PHOENIX grids and from this one.
+We  compared some temperature profiles with those of the
+original models that have been used as a starting point for the
+new library. For \(\tau> 1\) they match very well and we only see
+differences for \(\tau> 1\), which are irrelevant for the morphology
+of the final spectrum
+
+
+Doubly affected by new atmosphere model(v16) and new physics in grid. 
+
+Resolution = 
+
+\section{BT Models}
+
+ In the case of the most recent models, the Barber \& Tennison (UCL) so-called \textbf{ BT2 water vapor line list} has been used explaining why all those models bear names starting with 'BT-'. \textbf{BT-Dusty refers to dust in equilibrium with the gas phase }(sedimentation is
+ neglected), while \textbf{BT-Cond includes dust condensation in equilibrium with the gas phase while neglecting their opacities in the radiative transfer}. \textbf{BT-Settl means that gravitational settling of sedimentation is accounted for in the frame of a detailed cloud model (slightly adapted from Rossow '78) which also account for supersaturation, nucleation, sedimentation and mixing.}  
+
+
+\subsection{BT-Settl}
+
+The following section is adapted straight from \url{https://phoenix.ens-lyon.fr/Grids/FORMAT}, tidied up with some extra useful notes added.
+
+\subsubsection{FORMAT OF THE SPECTRA OUTPUT FILES}
+These are the Spectra of France Allard
+
+You can find the  pre-computed grids at \href{}{\url{add link here}}, also accessible via links on
+the bottom part of the simulator presentation page, or using this link:
+\href{http://phoenix.ens-lyon.fr/Grids/}{\url{http://phoenix.ens-lyon.fr/Grids/}}
+
+The file names contain the main parameters of the models\\
+lte{\(T_{eff}\)/10}-{Logg}{[M/H]}a[alpha/H].GRIDNAME.7.spec.gz/bz2/xz\\
+is the synthetic spectrum for the requested effective temperature
+(\(T_{eff}\)),surface gravity (Logg), metallicity by log10 number density with
+respect to solar values ([M/H]), and alpha element enhancement relative     
+to solar values [alpha/H]. The model grid is also mentioned in the name.
+
+Spectra are provided in an ASCII format (*.7.gz):\\
+	column1: wavelength in Angstrom\\
+	column2: 10**(F\_lam + DF) to convert to Ergs/sec/\({cm}^2\)/A\\
+	column3: 10**(B\_lam + DF) i.e. the blackbody fluxes of same \(T_{eff}\) in same units.\\
+
+
+DF= -8.d0 for all most recent models (Ergs/sec/\({cm}^2\)/cm). For older model
+series like the NextGen and AMES-Cond grids DF= -26.9007901434d0, 
+because previous Phoenix outputs were giving out the luminosity, 
+L (= \(R^2\) * H) in erg/s/\({cm}^2\)/cm.  And for NextGen spectra
+of effective temperature 5000K and above, DF'= -28.9007901434d0.
+
+Additional columns, obtained systematically when computing spectra using the
+Phoenix simulator, give the information to identify atomic and molecular
+lines. This information is used by the idl scripts lineid.pro and plotid.pro 
+which are provided in the user result package.  
+
+\textbf{Note:}
+- PyAstronomy's \href{www.hs.uni-hamburg.de/DE/Ins/Per/Czesla/PyA/PyA/pyaslDoc/phoenixUtils/phoenixUtils.html}{PhoenixUtils.readUnit7} function is able to read the newer file version directly into Ergs/sec/\({cm}^2\)/cm. Multiply by 10**-8 to convert to Ergs/sec/\({cm}^2\)/A
+- If handling the files manually in Python they are in IDl double format (e.g. 1.7234D+1) you need to string replace the exponential D with E to be able to convert into python floats (PyAstronomy does this already)
+
+
+With the stacked ASCII format (*.spec.gz files ) we have rather:
+\[
+line1: T_{eff} logg [M/H] of the model
+line2: number of wavelengths
+line3: F_lam(n) X 10**DF , n=1,number of wavelengths
+lineX: B_lam(n) X 10**DF , n=1,number of wavelengths
+\]
+This older file format is no longer used and no ID output is provided with those files.\\
+
+
+\textbf{A very important point is that since models are often computed on parallel
+computers using several nodes, it is important to sort the spectra files in
+increasing wavelength order prior to using them.}
+
+Please note that a conversion of the fluxes to absolute fluxes as measured at
+the earth requires a multiplication by the dilution factor
+$(radius/distance)^2$. The distance cancels out when accounting 
+simultaneously for the dilution factor and distance modulus at 10 pc
+(for absolute magnitudes for instance). This is done using the following
+formula:
+\[\rm M = m' - 5 * log10 ( R_{*} [in\ pc] ) + 5, \]
+
+where m' is the magnitude associated to the flux F' (= 10**(lgF + DF), 
+where F is the value directly contained in the spectrum file). 
+
+\textbf{The model parameters are indicated by the name of the files.}
+E.g. ``lte030-6.0-0.0.AMES-dusty.7.gz'' means a model with \(T_{eff}\)=3000K; 
+logg=6.0 and [M/H]=0.0, and that it is computed using both the 
+TiO and H2O line lists from Nasa \textbf{AMES}, and that it includes full 
+\textbf{dust }treatment (both condensation AND opacities). In the case of the most
+recent models, the Barber \& Tennison (UCL) so-called \textbf{ BT2 water vapor line list}
+has been used explaining why all those models bear names starting with 'BT-'. 
+\textbf{BT-Dusty refers to dust in equilibrium with the gas phase }(sedimentation is
+neglected), while \textbf{BT-Cond includes dust condensation in equilibrium with the
+gas phase while neglecting their opacities in the radiative transfer}. \textbf{BT-Settl
+means that gravitational settling of sedimentation is accounted for in the
+frame of a detailed cloud model (slightly adapted from Rossow '78) which also
+account for supersaturation, nucleation, sedimentation and mixing.}   
+
+Note that Phoenix delivers synthetic spectra in the vacuum and that a line
+shift is necessary to adapt these synthetic spectra for comparisons to
+observations from the ground. For this, divide the vacuum wavelengths by
+(1+1.e-6*nrefrac) as returned from the function below to get the air 
+wavelengths (or use the equation for AIR from it). 
+
+\lstset{language=Pascal} 
+\begin{lstlisting}[language=python, frame=single]  % Start your code-block
+
+def nrefrac(wavelength, density=1.0):
+    """Calculate refractive index of air from Cauchy formula.
+
+    Input: wavelength in Angstrom, density of air in amagat (relative to STP,
+    e.g. ~10% decrease per 1000m above sea level).
+    Returns N = (n-1) * 1.e6. 
+    """
+
+    # The IAU standard for conversion from air to vacuum wavelengths is given
+    # in Morton (1991, ApJS, 77, 119). For vacuum wavelengths (VAC) in
+    # Angstroms, convert to air wavelength (AIR) via: 
+
+    #  AIR = VAC / (1.0 + 2.735182E-4 + 131.4182 / VAC^2 + 2.76249E8 / VAC^4)
+
+    try:
+        if isinstance(wavelength, types.ObjectType):
+            wl = np.array(wavelength)
+    except TypeError:
+        return None
+
+    wl2inv = (1.e4 / wl)**2
+    refracstp = 272.643 + 1.2288 * wl2inv  + 3.555e-2 * wl2inv**2
+    return density * refracstp
+\end{lstlisting}
+
+\textbf{Note:} \href{http://www.hs.uni-hamburg.de/DE/Ins/Per/Czesla/PyA/PyA/pyaslDoc/aslDoc/pyasl_wvlconv.html}{PyAstronomy}\footnote{\url{http://www.hs.uni-hamburg.de/DE/Ins/Per/Czesla/PyA/PyA/pyaslDoc/aslDoc/pyasl_wvlconv.html}} also has functions to handle air/vacuum conversions. 
+
+\end{document}
+
+
+\textbf{DISCLAIMER}
+
+\textit{
+The model atmospheres and synthetic spectra ARE ONLY addressing the PHOTOSPHERE
+and do not include parts of the atmosphere which are not governed by
+hydrostatic equilibrium such as chromosphere's and corona for stars or
+exospheric evaporation in the case of irradiated planets or stars. }
+
+\textit{The simulator uses the most recent code version to generate as close as
+possible spectra compatible with the published grids i.e. by adopting the
+same parameters (mixing length, geometry of the radiative transfer, opacities
+for the most important when possible). No attempts has been made to reproduce 
+those older results exactly.}
+
+
+
+\subsection{Other Models}
+Mode models can be found at the 
+\href{http://svo2.cab.inta-csic.es/theory/newov/index.php}{Theoretical Spectra Web Server}
+
+\end{document}
