@@ -6,7 +6,7 @@
 # Functions to load in phoenix spectra.
 # To use in other notebooks.
 
-# In[1]:
+# In[6]:
 
 
 from spectrum_overload import Spectrum
@@ -26,7 +26,7 @@ from PyAstronomy.pyasl.phoenixUtils.read import readUnit7, readDTable, decompose
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[2]:
+# In[7]:
 
 
 def load_phoenix_aces(fname):
@@ -134,6 +134,9 @@ def phoenix_readUnit7(fname):
     blackbody flux  (Ergs/sec/cm**2/A)
     """
     from PyAstronomy.pyasl.phoenixUtils.read import readUnit7
+    if fname.endswith(".xz") or fname.endswith(".b2z"):
+        raise("compression error, please unzip first.")
+    
     result = readUnit7(fname)
     return result[:,0], result[:,1]*1e-8, result[:,2]*1e-8
 
@@ -147,56 +150,60 @@ def align2model(spectrum, model):
 
 # As we are mostly interested in the NIR I will limit the synthetic models to 1000-3000nm. This removes many large differences at the blue optical end.
 
-# In[3]:
+# In[8]:
 
 
 limits = [2000, 3000]
 
 
-# In[4]:
+# In[9]:
 
 
-# Simple test that they load
-w_settl, f_settl, bb_settl = load_Allard_Phoenix("data/lte043.0-2.5-0.0a+0.0.BT-Settl.spec.7")
+if __name__ == "__main__":
+    # Simple test that they load
+    w_settl, f_settl, bb_settl = load_Allard_Phoenix("data/lte043.0-2.5-0.0a+0.0.BT-Settl.spec.7")
 
-w_dusty, f_dusty, bb_dusty = load_Allard_Phoenix("data/lte043-2.5-0.0.BT-Dusty.spec.7")
+    w_dusty, f_dusty, bb_dusty = load_Allard_Phoenix("data/lte043-2.5-0.0.BT-Dusty.spec.7")
 
-w_next, f_next, bb_next = load_Allard_Phoenix("data/lte043-2.5-0.0a+0.0.BT-NextGen.7")
+    w_next, f_next, bb_next = load_Allard_Phoenix("data/lte043-2.5-0.0a+0.0.BT-NextGen.7")
 
-w_cond, f_cond, bb_cond = load_Allard_Phoenix("data/lte043-2.5-0.0a+0.0.BT-Cond.7")
+    w_cond, f_cond, bb_cond = load_Allard_Phoenix("data/lte043-2.5-0.0a+0.0.BT-Cond.7")
 
-w_aces, f_aces = load_phoenix_aces("data/lte04300-2.50-0.0.PHOENIX-ACES-AGSS-COND-2011-HiRes.fits")
+    w_aces, f_aces = load_phoenix_aces("data/lte04300-2.50-0.0.PHOENIX-ACES-AGSS-COND-2011-HiRes.fits")
+  
+    # Full Spectrum
+    plt.figure(figsize=(15, 10))
+    plt.plot(w_dusty, f_dusty, label="BT-DUSTY")
+    plt.plot(w_settl, f_settl, label="BT-SETTL")
+    plt.plot(w_cond, f_cond, label="BT-COND")
+    plt.plot(w_aces, f_aces, linestyle="--", label="PHOENIX ACES")
+    plt.plot(w_next, f_next, linestyle=":", label="NEXTGEN")
+
+    plt.title("Artucus - 4300K")
+    plt.xlabel("Wavelength(nm)")
+    plt.ylabel("Flux")
+    plt.legend()
+    plt.show()
+    
+    
 
 
 # In[5]:
 
 
-# Full Spectrum
-plt.figure(figsize=(15, 10))
-plt.plot(w_dusty_spec, f_dusty_spec, label="BT-DUSTY")
-plt.plot(w_settl, f_settl, label="BT-SETTL")
-plt.plot(w_cond, f_cond, label="BT-COND")
-plt.plot(w_aces, f_aces, linestyle="--", label="PHOENIX ACES")
-plt.plot(w_next, f_next, linestyle=":", label="NEXTGEN")
-
-plt.title("Artucus - 4300K")
-plt.xlabel("Wavelength(nm)")
-plt.ylabel("Flux")
-plt.legend()
-plt.show()
-
-
-# In[ ]:
-
-
 # Test PyAstronomy loader function compared to mine.
+# Commented out to not run on every loading.
 
-from PyAstronomy.pyasl.phoenixUtils.read import readUnit7
+# from PyAstronomy.pyasl.phoenixUtils.read import readUnit7
 
-get_ipython().run_line_magic('timeit', 'x,y,z = load_Allard_Phoenix("data/lte043-2.5-0.0.BT-Dusty.spec.7")')
+# %timeit x,y,z = load_Allard_Phoenix("data/lte043-2.5-0.0.BT-Dusty.spec.7")
+# 3.03 s ± 27.1 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 
-get_ipython().run_line_magic('timeit', 'x = readUnit7("data/lte043-2.5-0.0.BT-Dusty.spec.7")')
+# %timeit x = readUnit7("data/lte043-2.5-0.0.BT-Dusty.spec.7")
+# 2.41 s ± 28.9 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 
-get_ipython().run_line_magic('timeit', 'x, y, z = phoenix_readUnit7("data/lte043-2.5-0.0.BT-Dusty.spec.7")')
+# %timeit x, y, z = phoenix_readUnit7("data/lte043-2.5-0.0.BT-Dusty.spec.7")
+# 2.47 s ± 46.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 # readUnit7 is faster.
+
 

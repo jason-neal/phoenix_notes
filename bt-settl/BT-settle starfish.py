@@ -1,13 +1,10 @@
 
 # coding: utf-8
 
-# In[1]:
+# # Play with Starfish BTSETTL Grids:
+# 
 
-
-# Play with Starfish BTSETTL Grids:
-
-
-# In[7]:
+# In[ ]:
 
 
 import numpy as np
@@ -19,7 +16,7 @@ from Starfish.grid_tools import HDF5Creator, Instrument
 from Starfish.grid_tools import BTSettlGridInterface as BTSETTL
 
 
-# In[8]:
+# In[ ]:
 
 
 class CRIRES_50k(Instrument):
@@ -32,7 +29,7 @@ class CRIRES_50k(Instrument):
         
 
 
-# In[10]:
+# In[ ]:
 
 
 mygrid = BTSETTL(norm=False, air=False, base=Starfish.grid["btsettle_raw"])    # Disable normalization to solar boloametic flux.
@@ -43,13 +40,12 @@ creator = HDF5Creator(mygrid, Starfish.grid["btsettle_hdf5_path"], instrument, r
 
 
 
-
 # Need to change starfish BT-SETTL to change how it handles param_names and points
 
 # Might need own interface as there is hardcoded folder CXXXX2011
 
 
-# In[11]:
+# In[ ]:
 
 
 creator.process_grid()
@@ -57,9 +53,11 @@ creator.process_grid()
 
 # # Loading BTSETTL Directly
 
-# In[6]:
+# In[ ]:
 
 
 from Starfish.grid_tools import load_BTSettl
 load_BTSettl(2200, 4.5, 0.0)
 
+
+# The Starfish CIFISTGridInterface works directly with the CIFIST2011_2015 BT-Settl models which are the newest version.
