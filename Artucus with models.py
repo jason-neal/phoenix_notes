@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[50]:
+# In[1]:
 
 
 from spectrum_overload import Spectrum
@@ -22,7 +22,7 @@ from loading_phoenix import load_phoenix_aces, load_Allard_Phoenix, align2model
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[51]:
+# In[2]:
 
 
 
@@ -43,7 +43,7 @@ def align2model(spectrum, model):
 # load Allard_PHOENIX reutrns wavelenght in nanometers.
 # Using vac2air to convert to air, (which needs angstroms). Hence *10 / 10 fudge
 
-# In[36]:
+# In[3]:
 
 
 w_settl, f_settl, bb_settl = load_Allard_Phoenix("data/lte043.0-2.5-0.0a+0.0.BT-Settl.spec.7")
@@ -62,7 +62,7 @@ w_aces, f_aces = load_phoenix_aces("data/lte04300-2.50-0.0.PHOENIX-ACES-AGSS-CON
 aces_spec = Spectrum(xaxis=vac2air(w_aces*10)/10, flux=f_aces) 
 
 
-# In[37]:
+# In[4]:
 
 
 
@@ -75,7 +75,7 @@ plt.title("Difference between 1.5 and 2.5 logg for phoenix aces")
 plt.show()
 
 
-# In[28]:
+# In[5]:
 
 
 # Full Spectrum
@@ -94,7 +94,7 @@ plt.legend()
 plt.show()
 
 
-# In[35]:
+# In[6]:
 
 
 # COMPARISON TO PHOENIX ACES
@@ -145,7 +145,7 @@ plt.legend()
 plt.show()
 
 
-# In[43]:
+# In[7]:
 
 
 [1000, 3000]
@@ -214,7 +214,7 @@ plt.legend()
 plt.show()
 
 
-# In[6]:
+# In[8]:
 
 
 # ARTUCUS 1000nm
@@ -224,7 +224,7 @@ artucus_1 = Spectrum(xaxis=get_wavelength(hdr)/10, flux=data, header=hdr )
 artucus_1 = artucus_1.normalize("linear")
 
 
-# In[7]:
+# In[9]:
 
 
 #limits = [2100, 2200]
@@ -242,7 +242,7 @@ aces_spec.wav_select(*limits)
 aces_spec = aces_spec.normalize("exponential")
 
 
-# In[8]:
+# In[10]:
 
 
 print(np.mean(vac2air(aces_spec.xaxis*10)/10 - aces_spec.xaxis)*3e5)
@@ -250,7 +250,7 @@ print(np.mean(vac2air(aces_spec.xaxis*10)/10 - aces_spec.xaxis)*3e5)
 artucus_1 = align2model(artucus_1, aces_spec)
 
 
-# In[9]:
+# In[11]:
 
 
 plt.figure(figsize=(15, 10))
@@ -269,7 +269,7 @@ plt.legend()
 plt.show()
 
 
-# In[10]:
+# In[12]:
 
 
 plt.figure(figsize=(15, 10))
@@ -289,7 +289,7 @@ plt.legend()
 plt.show()
 
 
-# In[11]:
+# In[13]:
 
 
 plt.figure(figsize=(15, 10))
@@ -309,7 +309,7 @@ plt.legend()
 plt.show()
 
 
-# In[12]:
+# In[14]:
 
 
 # Adjust resolution to R=100000
@@ -326,7 +326,7 @@ aces_spec = convolve_spectrum(aces_spec, chip_limits=[aces_spec.xaxis[0], aces_s
 assert aces_spec != old_spec
 
 
-# In[13]:
+# In[15]:
 
 
 plt.figure(figsize=(15, 10))
@@ -345,7 +345,7 @@ plt.legend()
 plt.show()
 
 
-# In[14]:
+# In[16]:
 
 
 plt.figure(figsize=(15, 10))
@@ -367,7 +367,7 @@ plt.show()
 
 # # Artucus 2000nm 
 
-# In[15]:
+# In[17]:
 
 
 artucus_2 = "/home/jneal/Phd/data/artucus/21380-21518_s-obs.fits"
@@ -375,7 +375,7 @@ data, hdr = fits.getdata(artucus_2, header=True)
 artucus_2 = Spectrum(xaxis=get_wavelength(hdr)/10, flux=data, header=hdr)
 
 
-# In[16]:
+# In[18]:
 
 
 w_settl, f_settl, bb_settl = load_Allard_Phoenix("data/lte043.0-2.5-0.0a+0.0.BT-Settl.spec.7")
@@ -394,7 +394,7 @@ w_aces, f_aces = load_phoenix_aces("data/lte04300-1.50-0.0.PHOENIX-ACES-AGSS-CON
 aces_spec = Spectrum(xaxis=vac2air(w_aces*10)/10, flux=f_aces) 
 
 
-# In[17]:
+# In[19]:
 
 
 #limits = [2100, 2200]
@@ -413,48 +413,10 @@ aces_spec = aces_spec.normalize("exponential")
 
 
 
-# In[18]:
-
-
-artucus_2 = align2model(artucus_2, aces_spec)
-
-
-# In[19]:
-
-
-plt.figure(figsize=(15, 10))
-artucus_2.plot(label="Artucus")
-dusty_spec.plot(label="BT-DUSTY")
-settl_spec.plot(label="BT-SETTL")
-cond_spec.plot(label="BT-COND")
-aces_spec.plot(linestyle="--", label="PHOENIX ACES")
-next_spec.plot(linestyle=":", label="NEXTGEN")
-#plt.plot(w_dusty_fits, f_dusty_fits/max(f_dusty_fits), label="Dusty fits")
-
-plt.title("Artucus - 4300K")
-plt.xlabel("Wavelength(nm)")
-plt.ylabel("Flux")
-plt.legend()
-plt.show()
-
-
 # In[20]:
 
 
-plt.figure(figsize=(15, 10))
-artucus_2.plot(label="Artucus")
-dusty_spec.plot(label="BT-DUSTY")
-settl_spec.plot(label="BT-SETTL")
-cond_spec.plot(label="BT-COND")
-aces_spec.plot(linestyle="--", label="PHOENIX ACES")
-next_spec.plot(linestyle=":", label="NEXTGEN")
-
-plt.title("Artucus - 4300K")
-plt.xlabel("Wavelength(nm)")
-plt.ylabel("Flux")
-plt.xlim([2139, 2141])
-plt.legend()
-plt.show()
+artucus_2 = align2model(artucus_2, aces_spec)
 
 
 # In[21]:
@@ -472,7 +434,6 @@ next_spec.plot(linestyle=":", label="NEXTGEN")
 plt.title("Artucus - 4300K")
 plt.xlabel("Wavelength(nm)")
 plt.ylabel("Flux")
-plt.xlim([2142, 2144])
 plt.legend()
 plt.show()
 
@@ -480,18 +441,20 @@ plt.show()
 # In[22]:
 
 
-# Adjust resolution to R=100000
-R = 100000
-from convolve_spectrum import convolve_spectrum
-old_spec = aces_spec.copy()
+plt.figure(figsize=(15, 10))
+artucus_2.plot(label="Artucus")
+dusty_spec.plot(label="BT-DUSTY")
+settl_spec.plot(label="BT-SETTL")
+cond_spec.plot(label="BT-COND")
+aces_spec.plot(linestyle="--", label="PHOENIX ACES")
+next_spec.plot(linestyle=":", label="NEXTGEN")
 
-next_spec = convolve_spectrum(next_spec, chip_limits=[next_spec.xaxis[0], next_spec.xaxis[-1]], R=R, plot=False)
-dusty_spec = convolve_spectrum(dusty_spec, chip_limits=[dusty_spec.xaxis[0], dusty_spec.xaxis[-1]], R=R, plot=False)
-settl_spec = convolve_spectrum(settl_spec, chip_limits=[settl_spec.xaxis[0], settl_spec.xaxis[-1]], R=R, plot=False)
-cond_spec = convolve_spectrum(cond_spec, chip_limits=[cond_spec.xaxis[0], cond_spec.xaxis[-1]], R=R, plot=False)
-aces_spec = convolve_spectrum(aces_spec, chip_limits=[aces_spec.xaxis[0], aces_spec.xaxis[-1]], R=R, plot=False)
-
-assert aces_spec != old_spec
+plt.title("Artucus - 4300K")
+plt.xlabel("Wavelength(nm)")
+plt.ylabel("Flux")
+plt.xlim([2139, 2141])
+plt.legend()
+plt.show()
 
 
 # In[23]:
@@ -517,20 +480,36 @@ plt.show()
 # In[24]:
 
 
-# Test PyAstronomy loader function compared to mine.
+# Adjust resolution to R=100000
+R = 100000
+from convolve_spectrum import convolve_spectrum
+old_spec = aces_spec.copy()
 
-from PyAstronomy.pyasl.phoenixUtils.read import readUnit7
+next_spec = convolve_spectrum(next_spec, chip_limits=[next_spec.xaxis[0], next_spec.xaxis[-1]], R=R, plot=False)
+dusty_spec = convolve_spectrum(dusty_spec, chip_limits=[dusty_spec.xaxis[0], dusty_spec.xaxis[-1]], R=R, plot=False)
+settl_spec = convolve_spectrum(settl_spec, chip_limits=[settl_spec.xaxis[0], settl_spec.xaxis[-1]], R=R, plot=False)
+cond_spec = convolve_spectrum(cond_spec, chip_limits=[cond_spec.xaxis[0], cond_spec.xaxis[-1]], R=R, plot=False)
+aces_spec = convolve_spectrum(aces_spec, chip_limits=[aces_spec.xaxis[0], aces_spec.xaxis[-1]], R=R, plot=False)
 
-get_ipython().run_line_magic('timeit', 'load_Allard_Phoenix("data/lte043-2.5-0.0.BT-Dusty.spec.7")')
-
-get_ipython().run_line_magic('timeit', 'readUnit7("data/lte043-2.5-0.0.BT-Dusty.spec.7")')
-
-# Only slightly faster. (But faster)
+assert aces_spec != old_spec
 
 
 # In[25]:
 
 
-# Spectral Differences
+plt.figure(figsize=(15, 10))
+artucus_2.plot(label="Artucus")
+dusty_spec.plot(label="BT-DUSTY")
+settl_spec.plot(label="BT-SETTL")
+cond_spec.plot(label="BT-COND")
+aces_spec.plot(linestyle="--", label="PHOENIX ACES")
+next_spec.plot(linestyle=":", label="NEXTGEN")
+#plt.plot(w_dusty_fits, f_dusty_fits/max(f_dusty_fits), label="Dusty fits")
 
+plt.title("Artucus - 4300K")
+plt.xlabel("Wavelength(nm)")
+plt.ylabel("Flux")
+plt.xlim([2142, 2144])
+plt.legend()
+plt.show()
 
