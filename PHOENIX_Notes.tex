@@ -23,8 +23,40 @@ A cheat sheet for phoenix spectra.
 \end{abstract}
 
 \section{Introduction}
+
+This is my general understanding of the PHOENIX stellar atmosphere models, I do not claim it is complete or  100\% correct. The PHOENIX modelling code has evolved overtime incorporating new physical models to better explain the atmospheres. These also usually come with the inclusion of new/improved lines of atmospheric species, or using the newest solar abundances, e.g. Aspund 2009, or CIFIST --- (BT2 line list BT lines. Barber et al 2006 A high-accuracy computed water line list)
+
+The PHOENIX code started life as modelling code for Novae type objects. It was then "Extended (1995)" to be used for modelling the atmospheres of Low Mass Stars(LMS) / Brown Dwarfs(BDs). 
+The NEXTGEN models (1996-1999) (e.g. Allard et al .1999) were the next iteration that treats the atmosphere as a gas in chemical equilibrium,  but poorly model the spectra for very low mas stars as no treatment of dust.
+
+The next iteration was the Dusty/Cond models (Allard et al 2001) which investigate both extreme limits of clouds. They include the physics of condensation, in which the gas is allowed to condense (Gibbs free energy, partial pressures of gases etc.) into the Chemical equilibrium (without any species being removed). They also add a interaction of the condensation/dust with the light (add opacities of the dust, scattering). For the \textbf{Dusty model} the condensation/dust stays in the atmosphere where is created \textbf{(inefficient/no settling}) and it effects the spectrum through the dust opacities.  For the \textbf{Cond models} however the dust opacities are set to zero, to simulate \textbf{Efficient settling} in which all the clouds fall below the spectrum forming region. These also use a NASA AMES line list which is why they are called AMES-Dusty/AMES-Cond. Future models are re-run with the BT line list and a called BT-Cond/BT-Dusty.
+These to situations represent the limiting cases and BDS should transition from Dusty -> Cond was their temperatures get cooler (a have more settling), real LMS/BDs should fall between these to models somewhere. 
+
+Above 2600K the Dusty/COnd models are similar. This is because of the phase change due to crystallization of silicates in atmospheres below Teff= 2600K.
+
+The next iteration \textbf{AMES-Settl} starts to include the movements of dust in the atmosphere. Add limited diffusion model and removal the condensed particles from the chemical equilibrium, also include convective upwelling. (Allard et al 2003)
+
+The over the next 10 years they add supersaturation and 2D radiation hydro-dynamical modeling for the diffusion and mixing. 
+They use the BT2 water opacity line list Barber et al .2006, hence BT-Settl name change, and the Asplund et al 2009 solar abundances, which improve the results significantly.
+They find that gravity waves also play an important role in BD cloud formation and The BT-Settl also gives "perfectly fitting spectra distribution across the nIR- IR spectral region". (Allard et al 2010)  
+
+
+The newest BT-Settl models presented in Barrafe et al. 2015  add a \textbf{consistent interior} and also \textbf{evolution} (age). These are the most recently publish BT-Settl models available and use the Aspund 2099 abundances with some revisions by \textbf{ Caffau et al. (2011) solar abundances}.
+
+
 Phoenix ACES:
-Too many lines that don't seem to match the stellar spectra.
+The phoenix ACES model are quite different from the BT-Settl models. They start from the Cond models criteria and limit themselves to >2300K to avoid dealing with clouds. The switch out the chemical equation solver to the Astrophysical   Chemical   Equilibrium   Solver   (ACES, Barman 2012). They \textbf{do not comment on how this new solver affect the abundances of species}.
+
+
+Parametrisations, for the mass and the mixing length parameter \(\alpha\) to better match observations. Usually the mixing length has been fixed or solved using the 2D radiation hydro-dynamical modeling.
+3D radiative hydrodynamic models for convection mixing length parameter but \textbf{do not comment on how this affects the spectra} due to all the other changes.  
+Astrophysical   Chemical   Equilibrium   Solver   (ACES,
+Barman 2012) 
+
+They also use the Aspuland 2009 solar abundances.
+
+
+In practice the ACES spectra seem too many lines that don't seem to match the stellar spectra.   Seem to be sharper/deeper then other models.
 
 
 \paragraph{Outline}
@@ -34,17 +66,52 @@ Summary some of the different models
 \begin{table}
 	\begin{tabular}{lccccc}
 		\hline
-		Model & Phoenix version & Line Lists & Teff Range &  Notes &Reference\\
+		Model & year & Phoenix version  & Teff Range &  Notes &Reference\\
 		\hline
-		PHOENIX-ACES & 16 & & 2300-12000K & new EOS & \href{https://arxiv.org/abs/1303.5632}{Husser 2013} \\
+		PHOENIX-ACES & 2013 & 16 & 2300-12000K & new ACES EOS & \href{https://arxiv.org/abs/1303.5632}{Husser 2013} \\
 		
-	BT-Settl & 15 & & & & \href{}{} \\
-	BT-Cond & & & & & \href{}{} \\
-	BT-Dusty & & & & & \href{}{} \\
-	AMES-Cond & & & & & \href{}{} \\
-    AMES-Dusty & & & & & \href{}{} \\
+    	Settl & 2003+&15 & & & \href{}{} \\
+    	Cond & 2001 & & & & \href{}{} \\
+    	Dusty & 2001& & & & \href{}{} \\
+        NEXTGEN & 1996-1999& & & \href{}{} \\
+        EXTENDED &1995 & & & & \href{}{} \\
     \hline
 	\end{tabular}
+\end{table}
+
+
+
+\begin{table}
+    \begin{tabular}{lccccc}
+        \hline
+        Model & Phoenix version & Line Lists & Teff Range &  Notes &Reference\\
+        \hline
+        PHOENIX-ACES & 16 & & 2300-12000K & new EOS & \href{https://arxiv.org/abs/1303.5632}{Husser 2013} \\
+        
+        BT-Settl & 15 & & & & \href{}{} \\
+        BT-Cond & & & & & \href{}{} \\
+        BT-Dusty & & & & & \href{}{} \\
+        AMES-Cond & & & & & \href{}{} \\
+        AMES-Dusty & & & & & \href{}{} \\
+        \hline
+    \end{tabular}
+\end{table}
+
+
+\begin{table}
+    \begin{tabular}{lcc}
+        \hline
+        Model & Line Lists&Reference\\
+        \hline
+        AMES & NASA AMES H2O and TiO line list&  \href{}{ } \\
+        
+        BT2& High resolution H20 & \href{}{Barber et al. 2006} \\
+        Solar &  & \href{}{} \\
+        Solar & & \href{}{Caffau et al. (2011)} \\
+        Solar &  & \href{}{Aspund 2009} \\
+        
+        \hline
+    \end{tabular}
 \end{table}
 
 
@@ -200,8 +267,6 @@ def nrefrac(wavelength, density=1.0):
 
 \textbf{Note:} \href{http://www.hs.uni-hamburg.de/DE/Ins/Per/Czesla/PyA/PyA/pyaslDoc/aslDoc/pyasl_wvlconv.html}{PyAstronomy}\footnote{\url{http://www.hs.uni-hamburg.de/DE/Ins/Per/Czesla/PyA/PyA/pyaslDoc/aslDoc/pyasl_wvlconv.html}} also has functions to handle air/vacuum conversions. 
 
-\end{document}
-
 
 \textbf{DISCLAIMER}
 
@@ -217,6 +282,12 @@ same parameters (mixing length, geometry of the radiative transfer, opacities
 for the most important when possible). No attempts has been made to reproduce 
 those older results exactly.}
 
+
+\section{Using/Accessing models}
+
+PyAstronomy readUnit7()  for loading ``XXX.7'' files
+
+Starfish  grid\_tools: \\BTSettlGridInterface (older unit7 type),\\ CIFISTGridInterface (cifist2011\_2015 fits files), \\ PHOENIXGridInterfaceNoAlpha (PHOENIX-ACES)
 
 
 \subsection{Other Models}
