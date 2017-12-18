@@ -57,7 +57,7 @@ from loading_phoenix import load_phoenix_aces, load_Allard_Phoenix, align2model
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[ ]:
+# In[2]:
 
 
 os.chdir("/home/jneal/Phd/2017/Compare_PHOENIX/")
@@ -66,7 +66,7 @@ files = glob.glob("data/*")
 # print(files)
 
 
-# In[ ]:
+# In[3]:
 
 
 
@@ -81,7 +81,7 @@ def plot_allard_phoenix(fname, band=None):
     plt.ylabel("Flux")
 
 
-# In[ ]:
+# In[4]:
 
 
 from PyAstronomy.pyasl.phoenixUtils.read import readUnit7, readDTable, decomposeFilename
@@ -106,7 +106,7 @@ plt.title("BT-Settle 4300-2.5-0.0")
 plt.show()
 
 
-# In[ ]:
+# In[5]:
 
 
 wav, flux, bb_flux = load_Allard_Phoenix("data/lte043.0-2.5-0.0a+0.0.BT-Settl.spec.7")
@@ -124,14 +124,14 @@ plt.title("BT-Settle 4300-2.5-0.0")
 plt.show()
 
 
-# In[ ]:
+# In[6]:
 
 
 plot_allard_phoenix("data/lte043.0-2.5-0.0a+0.0.BT-Settl.spec.7")
 plt.show()
 
 
-# In[ ]:
+# In[7]:
 
 
 wav, flux, bb_flux = load_Allard_Phoenix("data/lte430-3.5-0.5a+0.2.BT-Cond.7")
